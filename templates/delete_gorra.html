@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eliminar Gorra</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card col-md-6 mx-auto border border-primary rounded my-5 text-center shadow">
+            <h1 class="my-4 text-center text-primary">ELIMINAR GORRA</h1>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="id">ID de la Gorra:</label>
+                        <input type="text" id="id" name="id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Eliminar" class="btn btn-danger">
+                    </div>
+                    {% if error %}
+                    <span class="error text-danger">{{ error }}</span>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

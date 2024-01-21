@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CRUD Gorras</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/estilosIndex.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="my-4 text-center text-primary">CRUD FLASK + SQLALCHEMY</h1>
+        <div class="d-flex justify-content-center my-3">
+            <a href="{{ url_for('createGorra') }}" class="btn btn-primary btn-lg">Crear Gorra</a>
+            <a href="{{ url_for('deleteGorra') }}" class="btn btn-danger btn-lg ml-2">Eliminar Gorra</a>
+        </div>
+        <table class="table text-center my-4">
+            <thead class="thead-light">
+                <tr>
+                    <th class="align-middle">ID</th>
+                    <th class="align-middle">Descripción</th>
+                    <th class="align-middle">Stock</th>
+                    <th class="align-middle">Fecha de Lanzamiento</th>
+                    <th class="align-middle">Nombre de la Imagen</th>
+                    <th class="align-middle">Imagen</th>
+                    <th class="align-middle">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gorra in gorras %}
+                <tr>
+                    <td class="align-middle">{{ gorra.id }}</td>
+                    <td class="align-middle">{{ gorra.descripcion }}</td>
+                    <td class="align-middle">{{ gorra.stock }}</td>
+                    <td class="align-middle">{{ gorra.fecha_lanzamiento }}</td>
+                    <td class="align-middle">{{ gorra.nombre_imagen }}</td>
+                    <td class="align-middle">
+                        <img src="data:image/jpeg;base64,{{ gorra.imagen }}" alt="Imagen de la gorra" class="img-fluid">
+                    </td>
+                    <td class="align-middle">
+                        <a href="{{ url_for('editGorra', id=gorra.id) }}" class="btn btn-primary">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">CRUD Flask + SQLAlchemy</span>
+        </div>
+    </footer>
+</body>
+
+</html>

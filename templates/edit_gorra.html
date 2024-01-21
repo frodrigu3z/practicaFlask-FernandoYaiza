@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Editar Gorra</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script>
+        function validarForm(e) {
+            var descripcion = document.forms["editForm"]["descripcion"].value;
+            var stock = document.forms["editForm"]["stock"].value;
+
+            if (descripcion == "" || stock == "" || fecha_lanzamiento == "") {
+                alert("Ningún campo puede estar vacío");
+                e.preventDefault();
+                return false;
+            }
+
+            if (isNaN(stock) || stock < 0) {
+                alert("El stock debe ser un número no negativo");
+                e.preventDefault();
+                return false;
+            }
+
+            var imagen = document.forms["editForm"]["imagen"].value;
+            if (imagen) {
+                var extension = imagen.substring(imagen.lastIndexOf('.') + 1).toLowerCase();
+                if (extension != "jpg" && extension != "png") {
+                    document.getElementById("imagenError").textContent = "El archivo de imagen debe ser jpg o png";
+                    e.preventDefault();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+
+        function validarTamano(archivo) {
+            var error = document.getElementById('errorTamano');
+            if (archivo.files[0].size > 65536) {
+                error.innerHTML = "El tamaño del archivo debe ser menor de 64 KB.";
+                archivo.value = '';
+            } else {
+                error.innerHTML = '';
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto border border-primary rounded my-5 text-center shadow">
+                <h1 class="text-center my-4 text-primary">EDITAR GORRA</h1>
+                <form name="editForm" method="POST" enctype="multipart/form-data" onsubmit="return validarForm(e)">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label>Descripción:</label>
+                        {{ form.descripcion(class="form-control text-center", required=True) }}
+                    </div>
+                    <div class="form-group">
+                        <label>Stock:</label>
+                        {{ form.stock(class="form-control text-center", required=True, type='number', min=0) }}
+                    </div>
+                    <div class="form-group">
+                        <label>Fecha de Lanzamiento:</label>
+                        {{ form.fecha_lanzamiento(class="form-control text-center", required=True, type='date') }}
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre de la Imagen:</label>
+                        {{ form.nombre_imagen(class="form-control text-center") }}
+                    </div>
+                    <div class="form-group">
+                        <label>Imagen Actual:</label><br>
+                        <img src="data:image/jpeg;base64,{{ imagen_base64 }}" alt="Imagen de la gorra" width="125">
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva Imagen:</label>
+                        {{ form.imagen(class="form-control-file", accept=".jpg,.png", onchange="validarTamano(this)") }}
+                        <span id="imagenError" class="text-danger"></span>
+                        <span id="errorTamano" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Editar Gorra" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+</body>
+
+</html>
