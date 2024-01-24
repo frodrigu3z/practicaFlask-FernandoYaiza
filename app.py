@@ -1,24 +1,26 @@
-from flask import Flask, render_template, flash, request, Response, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from database import app, db, GorraSchema
 from gorra import Gorra
 from werkzeug.utils import secure_filename
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, DateField, FileField, SubmitField
-from wtforms.validators import DataRequired, NumberRange, Email
+from wtforms.validators import DataRequired, NumberRange
 from flask_wtf.file import FileField, FileAllowed
-import os
 from base64 import b64encode
+import os
 
+# Creamos los esquemas de Marshmallow
 gorra_schema = GorraSchema()
 gorras_schema = GorraSchema(many=True)
 
+# Definimos la ruta principal de la aplicación
 @app.route('/')
 def home():
     gorras = Gorra.query.all()
     gorrasLeidas = gorras_schema.dump(gorras)
     return render_template('index.html', gorras = gorrasLeidas)
 
-
+# Definimos la ruta para crear una nueva gorra
 @app.route('/create', methods=['GET', 'POST'])
 def createGorra():
     form = GorraForm()
@@ -29,7 +31,7 @@ def createGorra():
         nombre_imagen = form.nombre_imagen.data
         imagen = form.imagen.data
 
-        imagen_path = os.path.join('/tmp', secure_filename(imagen.filename))
+        imagen_path = os.path.join('static/img', secure_filename(imagen.filename))
         imagen.save(imagen_path)
 
         with open(imagen_path, 'rb') as f:
@@ -41,6 +43,7 @@ def createGorra():
         return redirect(url_for('home'))
     return render_template('create_gorra.html', form=form)
 
+# Definimos la ruta para eliminar una gorra
 @app.route('/delete', methods=['GET', 'POST'])
 def deleteGorra():
     if request.method == 'POST':
@@ -55,6 +58,7 @@ def deleteGorra():
     else:
         return render_template('delete_gorra.html')
 
+# Definimos la ruta para editar una gorra
 @app.route('/edit/<id>', methods=['GET', 'POST'])
 def editGorra(id):    
     gorra = Gorra.query.get(id)
@@ -74,7 +78,7 @@ def editGorra(id):
         imagen = request.files['imagen']
         if imagen.filename != '':
             imagen_filename = secure_filename(gorra.nombre_imagen) + '.' + imagen.filename.rsplit('.', 1)[1].lower()
-            imagen_path = os.path.join('/tmp', secure_filename(imagen.filename))
+            imagen_path = os.path.join('static/img', imagen_filename)
             imagen.save(imagen_path)
             with open(imagen_path, 'rb') as f:
                 gorra.imagen = f.read()
@@ -84,6 +88,7 @@ def editGorra(id):
 
     return render_template('edit_gorra.html', form=form, imagen_base64=imagen_base64)
 
+# Definimos los formularios para crear y editar gorras
 class EditGorraForm(FlaskForm):
     descripcion = StringField('Descripcion', validators=[DataRequired()])
     stock = IntegerField('Stock', validators=[DataRequired(), NumberRange(min=0)])
@@ -99,6 +104,7 @@ class GorraForm(FlaskForm):
     imagen = FileField('Imagen', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Crear Gorra')
 
+# Manejo de errores para el error 404
 @app.errorhandler(404)
 def notFound(error=None):
     message ={
