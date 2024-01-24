@@ -1,7 +1,7 @@
 from database import db
 from sqlalchemy.sql import func
 
-# Para crear las tablas, desde el entorno de ejecución de Python, ejecutar:
+# Para crear las tablas:
 # from database import app, db
 # from gorra import Gorra
 # app.app_context().push()
@@ -27,5 +27,3 @@ class Gorra(db.Model):
 
     def __repr__(self):
         return f'<Gorra {self.id}>: {self.descripcion}'
-    
-    
