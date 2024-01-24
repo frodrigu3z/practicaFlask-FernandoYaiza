@@ -31,7 +31,7 @@ def createGorra():
         nombre_imagen = form.nombre_imagen.data
         imagen = form.imagen.data
 
-        imagen_path = os.path.join('static/img', secure_filename(imagen.filename))
+        imagen_path = os.path.join('/tmp', secure_filename(imagen.filename))
         imagen.save(imagen_path)
 
         with open(imagen_path, 'rb') as f:
@@ -78,7 +78,7 @@ def editGorra(id):
         imagen = request.files['imagen']
         if imagen.filename != '':
             imagen_filename = secure_filename(gorra.nombre_imagen) + '.' + imagen.filename.rsplit('.', 1)[1].lower()
-            imagen_path = os.path.join('static/img', imagen_filename)
+            imagen_path = os.path.join('/tmp', imagen_filename)
             imagen.save(imagen_path)
             with open(imagen_path, 'rb') as f:
                 gorra.imagen = f.read()
